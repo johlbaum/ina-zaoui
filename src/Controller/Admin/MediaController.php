@@ -4,16 +4,25 @@ namespace App\Controller\Admin;
 
 use App\Entity\Media;
 use App\Form\MediaType;
+use App\Repository\MediaRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Persistence\ManagerRegistry;
 
 class MediaController extends AbstractController
 {
+    private ManagerRegistry $doctrine;
+
+    public function __construct(ManagerRegistry $doctrine)
+    {
+        $this->doctrine = $doctrine;
+    }
+
     /**
      * @Route("/admin/media", name="admin_media_index")
      */
-    public function index(Request $request)
+    public function index(Request $request, MediaRepository $mediaRepository)
     {
         $page = $request->query->getInt('page', 1);
 
@@ -23,13 +32,14 @@ class MediaController extends AbstractController
             $criteria['user'] = $this->getUser();
         }
 
-        $medias = $this->getDoctrine()->getRepository(Media::class)->findBy(
+        $medias = $this->doctrine->getRepository(Media::class)->findBy(
             $criteria,
             ['id' => 'ASC'],
             25,
             25 * ($page - 1)
         );
-        $total = $this->getDoctrine()->getRepository(Media::class)->count([]);
+        $total = $mediaRepository->count($criteria);
+
 
         return $this->render('admin/media/index.html.twig', [
             'medias' => $medias,
@@ -53,8 +63,8 @@ class MediaController extends AbstractController
             }
             $media->setPath('uploads/' . md5(uniqid()) . '.' . $media->getFile()->guessExtension());
             $media->getFile()->move('uploads/', $media->getPath());
-            $this->getDoctrine()->getManager()->persist($media);
-            $this->getDoctrine()->getManager()->flush();
+            $this->doctrine->getManager()->persist($media);
+            $this->doctrine->getManager()->flush();
 
             return $this->redirectToRoute('admin_media_index');
         }
@@ -67,9 +77,9 @@ class MediaController extends AbstractController
      */
     public function delete(int $id)
     {
-        $media = $this->getDoctrine()->getRepository(Media::class)->find($id);
-        $this->getDoctrine()->getManager()->remove($media);
-        $this->getDoctrine()->getManager()->flush();
+        $media = $this->doctrine->getRepository(Media::class)->find($id);
+        $this->doctrine->getManager()->remove($media);
+        $this->doctrine->getManager()->flush();
         unlink($media->getPath());
 
         return $this->redirectToRoute('admin_media_index');
