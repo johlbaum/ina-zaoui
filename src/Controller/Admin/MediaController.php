@@ -5,18 +5,20 @@ namespace App\Controller\Admin;
 use App\Entity\Media;
 use App\Form\MediaType;
 use App\Repository\MediaRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Routing\Annotation\Route;
 
 class MediaController extends AbstractController
 {
-    private ManagerRegistry $doctrine;
+    private MediaRepository $mediaRepository;
+    private EntityManagerInterface $entityManager;
 
-    public function __construct(ManagerRegistry $doctrine)
+    public function __construct(MediaRepository $mediaRepository, EntityManagerInterface $entityManager)
     {
-        $this->doctrine = $doctrine;
+        $this->mediaRepository = $mediaRepository;
+        $this->entityManager = $entityManager;
     }
 
     #[Route("/admin/media", name: "admin_media_index")]
@@ -30,7 +32,7 @@ class MediaController extends AbstractController
             $criteria['user'] = $this->getUser();
         }
 
-        $medias = $this->doctrine->getRepository(Media::class)->findBy(
+        $medias = $this->mediaRepository->findBy(
             $criteria,
             ['id' => 'ASC'],
             25,
@@ -58,21 +60,23 @@ class MediaController extends AbstractController
             }
             $media->setPath('uploads/' . md5(uniqid()) . '.' . $media->getFile()->guessExtension());
             $media->getFile()->move('uploads/', $media->getPath());
-            $this->doctrine->getManager()->persist($media);
-            $this->doctrine->getManager()->flush();
+            $this->entityManager->persist($media);
+            $this->entityManager->flush();
 
             return $this->redirectToRoute('admin_media_index');
         }
 
-        return $this->render('admin/media/add.html.twig', ['form' => $form->createView()]);
+        return $this->render('admin/media/add.html.twig', [
+            'form' => $form
+        ]);
     }
 
     #[Route("/admin/media/delete/{id}", name: "admin_media_delete")]
     public function delete(int $id)
     {
-        $media = $this->doctrine->getRepository(Media::class)->find($id);
-        $this->doctrine->getManager()->remove($media);
-        $this->doctrine->getManager()->flush();
+        $media = $this->mediaRepository->find($id);
+        $this->entityManager->remove($media);
+        $this->entityManager->flush();
         unlink($media->getPath());
 
         return $this->redirectToRoute('admin_media_index');
