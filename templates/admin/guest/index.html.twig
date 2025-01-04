@@ -1,0 +1,27 @@
+{% extends 'admin.html.twig' %}
+
+{% block admin %}
+	<div class="d-flex justify-content-between align-items-center">
+		<h1>Invités</h1>
+		<a href="{{ path('admin_guest_add') }}" class="btn btn-primary">Ajouter</a>
+	</div>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Nom</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for guest in guests %}
+				<tr>
+					<td>{{ guest.name }}</td>
+					<td>
+						<a href="" class="btn btn-warning">Activer accès</a>
+						<a href="" class="btn btn-danger">Supprimer</a>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endblock %}
