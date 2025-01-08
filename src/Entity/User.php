@@ -36,6 +36,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private array $roles = [];
 
+    #[ORM\Column]
+    private ?bool $userAccessEnabled = true;
+
     public function __construct()
     {
         $this->medias = new ArrayCollection();
@@ -113,5 +116,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return $this->name;
+    }
+
+    public function isUserAccessEnabled(): ?bool
+    {
+        return $this->userAccessEnabled;
+    }
+
+    public function setUserAccessEnabled(bool $userAccessEnabled): void
+    {
+        $this->userAccessEnabled = $userAccessEnabled;
     }
 }

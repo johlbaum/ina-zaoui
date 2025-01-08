@@ -17,8 +17,30 @@
 				<tr>
 					<td>{{ guest.name }}</td>
 					<td>
-						<a href="" class="btn btn-warning">Activer accès</a>
-						<a href="" class="btn btn-danger">Supprimer</a>
+						<div class="admin-guests-forms d-flex">
+							<div class="me-3">
+								{{ form_start(formsAccess[guest.id], {
+								'action': path('admin_guest_toggle_access', {id: guest.id}),
+								'method': 'POST',
+								'attr': {
+									'onsubmit': 'return confirm("Voulez-vous modifier les accès de l\'utilisateur ' ~ guest.name ~ ' ?")'
+								}
+							}) }}
+							{{ form_widget(formsAccess[guest.id].submit) }}
+							{{ form_end(formsAccess[guest.id]) }}
+						</div>
+						<div class="me-3">
+							{{ form_start(formsDelete[guest.id], {
+								'action': path('admin_guest_delete', {id: guest.id}),
+								'method': 'POST',
+								'attr': {
+									'onsubmit': 'return confirm("Voulez-vous supprimer l\'utilisateur ' ~ guest.name ~ ' ?")'
+								}
+							}) }}
+								{{ form_widget(formsDelete[guest.id].submit) }}
+								{{ form_end(formsDelete[guest.id]) }}
+							</div>
+						</div>
 					</td>
 				</tr>
 			{% endfor %}
