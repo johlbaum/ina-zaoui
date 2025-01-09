@@ -7,6 +7,9 @@ use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use App\Entity\User;
 
+/**
+ * @Fixtures(group="production")
+ */
 class AppFixtures extends Fixture
 {
     private $userPasswordHasher;
@@ -30,7 +33,7 @@ class AppFixtures extends Fixture
         $manager->persist($userAdmin);
 
         // Création de 100 invités.
-        for ($i = 1; $i < 101; $i++) {
+        for ($i = 1; $i <= 100; $i++) {
 
             $userGuest = new User();
 
