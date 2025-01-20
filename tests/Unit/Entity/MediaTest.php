@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Unit\Entity;
 
 use App\Entity\Media;
 use App\Entity\User;
 use App\Entity\Album;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class MediaTest extends TestCase
 {
