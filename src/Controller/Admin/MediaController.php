@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Media;
 use App\Form\MediaType;
 use App\Repository\MediaRepository;
+use App\Service\FileManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,11 +15,13 @@ class MediaController extends AbstractController
 {
     private MediaRepository $mediaRepository;
     private EntityManagerInterface $entityManager;
+    private $fileManager;
 
-    public function __construct(MediaRepository $mediaRepository, EntityManagerInterface $entityManager)
+    public function __construct(MediaRepository $mediaRepository, EntityManagerInterface $entityManager, FileManager $fileManager)
     {
         $this->mediaRepository = $mediaRepository;
         $this->entityManager = $entityManager;
+        $this->fileManager = $fileManager;
     }
 
     #[Route("/admin/media", name: "admin_media_index")]
@@ -58,26 +61,31 @@ class MediaController extends AbstractController
             if (!$this->isGranted('ROLE_ADMIN')) {
                 $media->setUser($this->getUser());
             }
-            $media->setPath('uploads/' . md5(uniqid()) . '.' . $media->getFile()->guessExtension());
-            $media->getFile()->move('uploads/', $media->getPath());
+
+            $filename = md5(uniqid()) . '.' . $media->getFile()->guessExtension();
+
+            $media->setPath($this->fileManager->getFilePath($filename));
+            $media->getFile()->move($this->fileManager->getFileDirectory(), $filename);
+
             $this->entityManager->persist($media);
             $this->entityManager->flush();
 
             return $this->redirectToRoute('admin_media_index');
         }
 
-        return $this->render('admin/media/add.html.twig', [
-            'form' => $form
-        ]);
+        return $this->render('admin/media/add.html.twig', ['form' => $form->createView()]);
     }
 
     #[Route("/admin/media/delete/{id}", name: "admin_media_delete")]
     public function delete(int $id)
     {
         $media = $this->mediaRepository->find($id);
+        $filePath = $this->fileManager->getFilePath($media->getPath());
+
         $this->entityManager->remove($media);
         $this->entityManager->flush();
-        unlink($media->getPath());
+
+        unlink($filePath);
 
         return $this->redirectToRoute('admin_media_index');
     }
