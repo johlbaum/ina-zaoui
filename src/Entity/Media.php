@@ -21,6 +21,7 @@ class Media
     private ?User $user = null;
 
     #[ORM\ManyToOne(targetEntity: Album::class, fetch: "EAGER")]
+    #[ORM\JoinColumn(onDelete: "CASCADE")]
     private ?Album $album = null;
 
     #[ORM\Column(type: Types::STRING)]
