@@ -19,10 +19,12 @@ class FileManager
             return 'tests/Fixtures/images/' . $filename;
         }
 
+        // Si le fichier commence déjà par 'uploads/', on retourne ce chemin sans modification.
         if (strpos($filename, 'uploads/') === 0) {
             return $filename;
         }
 
+        // Sinon, on ajoutee le préfixe 'uploads/'.
         return 'uploads/' . $filename;
     }
 

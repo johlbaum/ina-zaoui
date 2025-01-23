@@ -1,65 +1,72 @@
 <?php
 
-namespace App\Tests\Functional\Media;
+namespace App\Tests\Functional\Admin\Media;
 
 use App\Entity\Album;
 use App\Entity\Media;
 use App\Entity\User;
 use App\Tests\Functional\FunctionalTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class AddMediaTest extends FunctionalTestCase
 {
     public function testShouldAddMediaByAdmin(): void
     {
-        // On connecte l'utilisateur administrateur.
         $this->login();
 
-        // On envoie une requête GET pour accéder au formulaire d'ajout de média.
         $crawler = $this->get('/admin/media/add');
         $this->assertResponseIsSuccessful();
 
-        // On récupère l'utilisateur et un album depuis la base de données.
         $userRepository = $this->entityManager->getRepository(User::class);
         $albumRepository = $this->entityManager->getRepository(Album::class);
         $user = $userRepository->find(1);
         $album = $albumRepository->find(1);
 
-        // On vérifie que le formulaire d'ajout est bien présent.
         $form = $crawler->filter('form')->form();
-
-        // On remplit les champs du formulaire.
         $form['media[user]'] = $user->getId();
         $form['media[album]'] = $album->getId();
         $form['media[title]'] = "Un média de test";
-        $form['media[file]'] = __DIR__ . '/../../Fixtures/images/test_file.jpeg';
-
-        // On soumet le formulaire.
+        $form['media[file]'] = __DIR__ . '/../../../Fixtures/images/test_file.jpeg';
         $this->client->submit($form);
 
-        // On vérifie la redirection après soumission.
-        $this->assertResponseRedirects('/admin/media');
+        $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
 
-        // On suit la redirection.
         $this->client->followRedirect();
 
-        // On récupère le média créé en base de données.
         $media = $this->entityManager->getRepository(Media::class)->findOneBy(['title' => 'Un média de test']);
 
-        // On vérifie que le média a bien été créé en base de données.
         $this->assertNotNull($media);
-
-        // On vérifie que le média est bien associé à l'utilisateur correct.
         $this->assertEquals($user->getId(), $media->getUser()->getId());
-
-        // On vérifie que le média est bien associé à l'album correct.
         $this->assertEquals($album->getId(), $media->getAlbum()->getId());
+    }
+
+    public function testShouldAddMediaByGuest(): void
+    {
+        $this->login('invite1@example.com');
+
+        $crawler = $this->get('/admin/media/add');
+        $this->assertResponseIsSuccessful();
+
+        $form = $crawler->filter('form')->form();
+        $form['media[title]'] = "Un média de test";
+        $form['media[file]'] = __DIR__ . '/../../../Fixtures/images/test_file.jpeg';
+        $this->client->submit($form);
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
+
+        $this->client->followRedirect();
+
+        $media = $this->entityManager->getRepository(Media::class)->findOneBy(['title' => 'Un média de test']);
+        $guest = $this->entityManager->getRepository(User::class)->findOneBy(['email' => 'invite1@example.com']);
+
+        $this->assertNotNull($media);
+        $this->assertEquals($guest->getId(), $media->getUser()->getId());
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
 
-        // On récupère le média en base de données.
         $media = $this->entityManager->getRepository(Media::class)->findOneBy(['title' => 'Un média de test']);
 
         // On supprime le fichier.

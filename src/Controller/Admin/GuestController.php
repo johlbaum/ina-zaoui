@@ -28,7 +28,7 @@ class GuestController extends AbstractController
     #[Route("/admin/guest", name: "admin_guest_index")]
     public function index()
     {
-        $guests = $this->userService->getAllUsersWithRole('ROLE_USER');
+        $guests = $this->userService->findUsersWithRole('ROLE_USER');
 
         $formsAccess = [];
         $formsDelete = [];
@@ -65,8 +65,6 @@ class GuestController extends AbstractController
 
             return $this->redirectToRoute('admin_guest_index');
         }
-
-        return $this->redirectToRoute('admin_guest_index');
     }
 
     #[Route("/admin/guest/delete/{id}", name: "admin_guest_delete", methods: ["POST"])]
@@ -81,8 +79,6 @@ class GuestController extends AbstractController
 
             return $this->redirectToRoute('admin_guest_index');
         }
-
-        return $this->redirectToRoute('admin_guest_index');
     }
 
 

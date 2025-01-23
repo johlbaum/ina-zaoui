@@ -13,7 +13,7 @@ class UserService
         $this->userRepository = $userRepository;
     }
 
-    public function getAllUsersWithRole(string $role): array
+    public function findUsersWithRole(string $role): array
     {
         $allUsers = $this->userRepository->findBy([], ['id' => 'ASC']);
 
@@ -22,9 +22,18 @@ class UserService
         });
     }
 
-    public function getUsersWithRoleAndEnabled(string $role): array
+    public function findUsersWithRoleEnabled(string $role): array
     {
         $allUsers = $this->userRepository->findBy(['userAccessEnabled' => true], ['id' => 'ASC']);
+
+        return array_filter($allUsers, function ($user) use ($role) {
+            return in_array($role, $user->getRoles(), true);
+        });
+    }
+
+    public function findUsersWithRoleDisabled(string $role): array
+    {
+        $allUsers = $this->userRepository->findBy(['userAccessEnabled' => false], ['id' => 'ASC']);
 
         return array_filter($allUsers, function ($user) use ($role) {
             return in_array($role, $user->getRoles(), true);
