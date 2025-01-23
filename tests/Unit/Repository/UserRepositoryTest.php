@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Tests\Repository;
+namespace App\Tests\Unit\Repository;
 
 use App\Entity\User;
-use App\Service\UserService;
+use App\Repository\UserRepository;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use App\Tests\Functional\FunctionalTestCase;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -20,10 +20,9 @@ class UserRepositoryTest extends FunctionalTestCase
 
     public function testUpgradePassword(): void
     {
-        $userService = $this->getContainer()->get(UserService::class);
+        $userRepository = $this->getContainer()->get(UserRepository::class);
 
-        // On récupère le premier invité depuis la base de données.
-        $guests = $userService->findUsersWithRoleEnabled('ROLE_USER');
+        $guests = $userRepository->findGuestsWithEnabledAccess();
         $guest = $guests[1];
 
         $newHashedPassword = 'newpassword';

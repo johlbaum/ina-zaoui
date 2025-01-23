@@ -6,9 +6,9 @@ use App\Entity\User;
 use App\Form\GuestType;
 use App\Form\GuestAccessType;
 use App\Form\GuestDeleteType;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Service\UserService;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -16,19 +16,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 class GuestController extends AbstractController
 {
-    private UserService $userService;
     private EntityManagerInterface $entityManager;
 
-    public function __construct(UserService $userService, EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        $this->userService = $userService;
         $this->entityManager = $entityManager;
     }
 
     #[Route("/admin/guest", name: "admin_guest_index")]
-    public function index()
+    public function index(UserRepository $userRepository)
     {
-        $guests = $this->userService->findUsersWithRole('ROLE_USER');
+        $guests = $userRepository->findGuests();
 
         $formsAccess = [];
         $formsDelete = [];

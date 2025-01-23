@@ -6,7 +6,7 @@ use App\Entity\User;
 use App\Tests\Functional\FunctionalTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class DeleteTest extends FunctionalTestCase
+class DeleteGuestTest extends FunctionalTestCase
 {
     public function testShouldDeleteGuestByAdmin(): void
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Functional\Home\Admin;
+namespace App\Tests\Functional\Admin;
 
 use App\Tests\Functional\FunctionalTestCase;
 

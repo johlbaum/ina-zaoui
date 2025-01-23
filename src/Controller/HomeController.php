@@ -7,15 +7,14 @@ use App\Repository\MediaRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Service\UserService;
 
 class HomeController extends AbstractController
 {
-    private UserService $userService;
+    private UserRepository $userRepository;
 
-    public function __construct(UserService $userService)
+    public function __construct(UserRepository $userRepository)
     {
-        $this->userService = $userService;
+        $this->userRepository = $userRepository;
     }
 
     #[Route("/", name: "home")]
@@ -27,7 +26,7 @@ class HomeController extends AbstractController
     #[Route("/guests", name: "guests")]
     public function guests()
     {
-        $guests = $this->userService->findUsersWithRoleEnabled('ROLE_USER');
+        $guests = $this->userRepository->findGuestsWithMediaCount();
 
         return $this->render('front/guests.html.twig', [
             'guests' => $guests
@@ -35,9 +34,9 @@ class HomeController extends AbstractController
     }
 
     #[Route("/guest/{id}", name: "guest")]
-    public function guest(UserRepository $userRepository, int $id)
+    public function guest(int $id)
     {
-        $guest = $userRepository->find($id);
+        $guest = $this->userRepository->find($id);
 
         return $this->render('front/guest.html.twig', [
             'guest' => $guest
@@ -45,13 +44,16 @@ class HomeController extends AbstractController
     }
 
     #[Route("/portfolio/{id?}", name: "portfolio")]
-    public function portfolio(AlbumRepository $albumRepository, MediaRepository $mediaRepository, ?int $id = null)
-    {
+    public function portfolio(
+        AlbumRepository $albumRepository,
+        MediaRepository $mediaRepository,
+        ?int $id = null
+    ) {
         $albums = $albumRepository->findAll();
 
         $album = $id ? $albumRepository->find($id) : null;
 
-        $admin = $this->userService->findUsersWithRole('ROLE_ADMIN');
+        $admin = $this->userRepository->findAdminUser();
 
         $medias = $album
             ? $mediaRepository->findBy(['album' => $album], ['id' => 'ASC'])

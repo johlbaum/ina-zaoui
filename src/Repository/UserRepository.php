@@ -40,6 +40,64 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
+    public function findAdminUser(): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->where('CONTAINS(TO_JSONB(u.roles), :role) = TRUE')
+            ->setParameter('role', '["ROLE_ADMIN"]')
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findGuests(): array
+    {
+        return $this->createQueryBuilder('u')
+            ->where('CONTAINS(TO_JSONB(u.roles), :role) = TRUE')
+            ->setParameter('role', '["ROLE_USER"]')
+            ->orderBy('u.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findGuestsWithMediaCount(): array
+    {
+        return $this->createQueryBuilder('u')
+            ->select('u.id, u.name, COUNT(m.id) AS mediaCount')
+            ->leftJoin('u.medias', 'm')
+            ->where('u.userAccessEnabled = :enabled')
+            ->andWhere('CONTAINS(TO_JSONB(u.roles), :role) = TRUE')
+            ->setParameter('enabled', true)
+            ->setParameter('role', '["ROLE_USER"]')
+            ->groupBy('u.id, u.name')
+            ->orderBy('u.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findGuestsWithEnabledAccess(): array
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.userAccessEnabled = :enabled')
+            ->andWhere('CONTAINS(TO_JSONB(u.roles), :role) = TRUE')
+            ->setParameter('enabled', true)
+            ->setParameter('role', '["ROLE_USER"]')
+            ->orderBy('u.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findGuestsWithDisabledAccess(): array
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.userAccessEnabled = :enabled')
+            ->andWhere('CONTAINS(TO_JSONB(u.roles), :role) = TRUE')
+            ->setParameter('enabled', false)
+            ->setParameter('role', '["ROLE_USER"]')
+            ->orderBy('u.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */

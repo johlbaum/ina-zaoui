@@ -5,7 +5,7 @@ namespace App\Tests\Functional\Home\Portfolio;
 use App\Repository\AlbumRepository;
 use App\Tests\Functional\FunctionalTestCase;
 
-class ShowAMediaTest extends FunctionalTestCase
+class ShowMediaTest extends FunctionalTestCase
 {
     public function testShouldDisplayMediasForSpecificAlbum(): void
     {

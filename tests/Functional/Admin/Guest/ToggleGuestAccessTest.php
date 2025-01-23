@@ -6,7 +6,7 @@ use App\Entity\User;
 use App\Tests\Functional\FunctionalTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class ToggleAccessTest extends FunctionalTestCase
+class ToggleGuestAccessTest extends FunctionalTestCase
 {
     public function testShouldToggleGuestAccessByAdmin(): void
     {

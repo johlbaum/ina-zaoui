@@ -2,17 +2,16 @@
 
 namespace App\Tests\Functional\Home\Guest;
 
+use App\Repository\UserRepository;
 use App\Tests\Functional\FunctionalTestCase;
-use App\Service\UserService;
 
 class ShowGuestsTest extends FunctionalTestCase
 {
     public function testShouldShowAllGuests(): void
     {
-        $userService = $this->getContainer()->get(UserService::class);
+        $userRepository = $this->getContainer()->get(UserRepository::class);
 
-        // On récupèrer les invités avec le rôle 'ROLE_USER' et qui sont activés.
-        $guests = $userService->findUsersWithRoleEnabled('ROLE_USER');
+        $guests = $userRepository->findGuestsWithEnabledAccess();
 
         $crawler = $this->get('/guests');
         $this->assertResponseIsSuccessful();
@@ -31,12 +30,11 @@ class ShowGuestsTest extends FunctionalTestCase
         $this->assertStringContainsString('Invité 5 (10)', $lastGuestText);
     }
 
-    public function testShouldNotShowPhotosOfRevokedGuest(): void
+    public function testShouldNotShowMediaOfRevokedGuest(): void
     {
-        $userService = $this->getContainer()->get(UserService::class);
+        $userRepository = $this->getContainer()->get(UserRepository::class);
 
-        // On sélectionne un invité dont l'accès est désactivé.
-        $guests = $userService->findUsersWithRoleDisabled('ROLE_USER');
+        $guests = $userRepository->findGuestsWithDisabledAccess();
         $revokedGuest = $guests[1];
 
         $crawler = $this->get('/guests');

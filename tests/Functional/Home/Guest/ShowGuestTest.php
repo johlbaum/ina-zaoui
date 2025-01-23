@@ -2,18 +2,17 @@
 
 namespace App\Tests\Functional\Home\Guest;
 
+use App\Repository\UserRepository;
 use App\Tests\Functional\FunctionalTestCase;
-use App\Service\UserService;
 
 class ShowGuestTest extends FunctionalTestCase
 {
     public function testShouldShowGuestWithMedias(): void
     {
-        $userService = $this->getContainer()->get(UserService::class);
+        $userRepository = $this->getContainer()->get(UserRepository::class);
 
-        // On récupère le premier invité depuis la base de données dont l'accès est activé.
-        $guests = $userService->findUsersWithRoleEnabled('ROLE_USER');
-        $guest = $guests[1];
+        $guests = $userRepository->findGuestsWithEnabledAccess();
+        $guest = $guests[0];
 
         $crawler = $this->get('/guest/' . $guest->getId());
         $this->assertResponseIsSuccessful();

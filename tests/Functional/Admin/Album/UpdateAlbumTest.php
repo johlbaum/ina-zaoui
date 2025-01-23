@@ -6,7 +6,7 @@ use App\Entity\Album;
 use App\Tests\Functional\FunctionalTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class UpdateTest extends FunctionalTestCase
+class UpdateAlbumTest extends FunctionalTestCase
 {
     public function testShouldUpdateAlbumByAdmin(): void
     {
