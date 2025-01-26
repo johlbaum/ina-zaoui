@@ -4,9 +4,8 @@ namespace App\Controller\Admin;
 
 use App\Entity\User;
 use App\Form\GuestType;
-use App\Form\GuestAccessType;
-use App\Form\GuestDeleteType;
 use App\Repository\UserRepository;
+use App\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,78 +16,87 @@ use Symfony\Component\HttpFoundation\Response;
 class GuestController extends AbstractController
 {
     private EntityManagerInterface $entityManager;
+    private UserRepository $userRepository;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, UserRepository $userRepository)
     {
         $this->entityManager = $entityManager;
+        $this->userRepository = $userRepository;
     }
 
+    /**
+     * Affiche la liste des invités.
+     *
+     * @param Request $request : la requête HTTP contenant les paramètres de pagination
+     * @param PaginationService $paginationService : le service responsable de la gestion de la pagination
+     * @return Response : la réponse HTTP
+     */
     #[Route("/admin/guest", name: "admin_guest_index")]
-    public function index(UserRepository $userRepository)
+    public function index(Request $request, PaginationService $paginationService): Response
     {
-        $guests = $userRepository->findGuests();
+        $paginationParams = $paginationService->getPaginationParams($request, 25);
 
-        $formsAccess = [];
-        $formsDelete = [];
+        // On récupère la liste de tous les invités (rôle USER).
+        $guests = $this->userRepository->findPaginateGuests($paginationParams['limit'], $paginationParams['offset']);
 
-        // Pour chaque invité, on génère deux formulaires :
-        // - Un formulaire pour activer ou désactiver l'accès à l'espace invité.
-        // - Un formulaire pour supprimer le compte utilisateur.
-        foreach ($guests as $guest) {
-            $formsAccess[$guest->getId()] = $this->createForm(GuestAccessType::class, null, [
-                'is_enabled' => $guest->isUserAccessEnabled(),
-            ])->createView();
-
-            $formsDelete[$guest->getId()] = $this->createForm(GuestDeleteType::class, null)->createView();
-        }
+        // On calcule le nombre total de pages nécessaires pour afficher tous les invités.
+        $totalGuests = $this->userRepository->countGuests();
+        $totalPages = $paginationService->getTotalPages($totalGuests, $paginationParams['limit']);
 
         return $this->render('admin/guest/index.html.twig', [
             'guests' => $guests,
-            'formsAccess' => $formsAccess,
-            'formsDelete' => $formsDelete
+            'page' => $paginationParams['page'],
+            'totalPages' => $totalPages
         ]);
     }
 
-    #[Route("/admin/guest/toggle_access/{id}", name: "admin_guest_toggle_access", methods: ["POST"])]
-    public function toggleGuestAccess(Request $request, User $guest): Response
+    /**
+     * Active ou désactive l'accès d'un utilisateur invité.
+     *
+     * @param User $guest L'utilisateur invité dont on modifie l'accès
+     * @return Response : la réponse HTTP
+     */
+    #[Route("/admin/guest/toggle_access/{id}", name: "admin_guest_toggle_access", methods: ["GET"])]
+    public function toggleGuestAccess(User $guest): Response
     {
-        $form = $this->createForm(GuestAccessType::class, null, [
-            'is_enabled' => $guest->isUserAccessEnabled(),
-        ]);
-        $form->handleRequest($request);
+        $guest->setUserAccessEnabled(!$guest->isUserAccessEnabled());
 
-        if ($form->isSubmitted()) {
-            $guest->setUserAccessEnabled(!$guest->isUserAccessEnabled());
-            $this->entityManager->flush();
+        $this->entityManager->flush();
 
-            return $this->redirectToRoute('admin_guest_index');
-        }
+        return $this->redirectToRoute('admin_guest_index');
     }
 
-    #[Route("/admin/guest/delete/{id}", name: "admin_guest_delete", methods: ["POST"])]
-    public function delete(Request $request, User $guest): Response
+    /**
+     * Supprime un utilisateur invité.
+     *
+     * @param User $guest : l'utilisateur invité à supprimer
+     * @return Response La réponse HTTP
+     */
+    #[Route("/admin/guest/delete/{id}", name: "admin_guest_delete", methods: ["GET"])]
+    public function delete(User $guest): Response
     {
-        $form = $this->createForm(GuestDeleteType::class);
-        $form->handleRequest($request);
+        $this->entityManager->remove($guest);
+        $this->entityManager->flush();
 
-        if ($form->isSubmitted()) {
-            $this->entityManager->remove($guest);
-            $this->entityManager->flush();
-
-            return $this->redirectToRoute('admin_guest_index');
-        }
+        return $this->redirectToRoute('admin_guest_index');
     }
 
-
+    /**
+     * Ajoute un nouvel invité.
+     *
+     * @param Request $request : la requête HTTP contenant les données du formulaire
+     * @param UserPasswordHasherInterface $passwordHasher : le service pour hasher les mots de passe
+     * @return Response : la réponse HTTP
+     */
     #[Route("/admin/guest/add", name: "admin_guest_add")]
     public function add(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
         $guest = new User();
+
         $form = $this->createForm(GuestType::class, $guest);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $plainPassword = $form->get('password')->getData();
 
             $hashedPassword = $passwordHasher->hashPassword($guest, $plainPassword);

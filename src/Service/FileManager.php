@@ -13,6 +13,12 @@ class FileManager
         $this->kernel = $kernel;
     }
 
+    /**
+     * Retourne le chemin complet du fichier en fonction de l'environnement.
+     *
+     * @param string $filename : le nom du fichier
+     * @return string : le chemin complet du fichier
+     */
     public function getFilePath(string $filename): string
     {
         if ($this->kernel->getEnvironment() === 'test') {
@@ -28,7 +34,11 @@ class FileManager
         return 'uploads/' . $filename;
     }
 
-
+    /**
+     * Retourne le répertoire où les fichiers doivent être enregistrés en fonction de l'environnement.
+     *
+     * @return string : le chemin du répertoire de destination
+     */
     public function getFileDirectory(): string
     {
         if ($this->kernel->getEnvironment() === 'test') {

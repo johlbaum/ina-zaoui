@@ -8,6 +8,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SecurityController extends AbstractController
 {
+    /**
+     * Affiche le formulaire de connexion et gère les erreurs d'authentification.
+     *
+     * @param AuthenticationUtils $authenticationUtils : utilitaire pour récupérer les erreurs d'authentification
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     #[Route("/login", name: "admin_login")]
     public function login(AuthenticationUtils $authenticationUtils)
     {
@@ -20,6 +26,11 @@ class SecurityController extends AbstractController
         ]);
     }
 
+    /**
+     * Déconnecte l'utilisateur.
+     *
+     * @throws \LogicException : cette méthode est interceptée par la configuration de sécurité
+     */
     #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
     {

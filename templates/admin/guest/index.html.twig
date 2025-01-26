@@ -17,28 +17,12 @@
 				<tr>
 					<td>{{ guest.name }}</td>
 					<td>
-						<div class="admin-guests-forms d-flex">
+						<div class="admin-guests-actions d-flex">
 							<div class="me-3">
-								{{ form_start(formsAccess[guest.id], {
-								'action': path('admin_guest_toggle_access', {id: guest.id}),
-								'method': 'POST',
-								'attr': {
-									'onsubmit': 'return confirm("Voulez-vous modifier les accès de l\'utilisateur ' ~ guest.name ~ ' ?")'
-								}
-							}) }}
-							{{ form_widget(formsAccess[guest.id].submit) }}
-							{{ form_end(formsAccess[guest.id]) }}
-						</div>
-						<div class="me-3">
-							{{ form_start(formsDelete[guest.id], {
-								'action': path('admin_guest_delete', {id: guest.id}),
-								'method': 'POST',
-								'attr': {
-									'onsubmit': 'return confirm("Voulez-vous supprimer l\'utilisateur ' ~ guest.name ~ ' ?")'
-								}
-							}) }}
-								{{ form_widget(formsDelete[guest.id].submit) }}
-								{{ form_end(formsDelete[guest.id]) }}
+								<a href="{{ path('admin_guest_toggle_access', { id: guest.id }) }}" class="btn btn-warning" onclick="return confirm('Voulez-vous modifier les accès de l\'utilisateur {{ guest.name }} ?')">{{ guest.isUserAccessEnabled() ? "Désactiver l'accès" : "Activer l'accès" }}</a>
+							</div>
+							<div class="me-3">
+								<a href="{{ path('admin_guest_delete', { id: guest.id }) }}" class="btn btn-danger" onclick="return confirm('Voulez-vous supprimer l\'utilisateur {{ guest.name }} ?')">Supprimer le compte</a>
 							</div>
 						</div>
 					</td>
@@ -46,4 +30,12 @@
 			{% endfor %}
 		</tbody>
 	</table>
+
+	{% include 'partials/_pagination.html.twig' with {
+		basePath: 'admin_guest_index',
+		queryParams: {},
+		page: page,
+		totalPages: totalPages
+	} %}
+
 {% endblock %}

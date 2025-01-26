@@ -35,4 +35,16 @@ class ShowGuestTest extends FunctionalTestCase
         $lastMediaSrc = $crawler->filter('.media')->last()->filter('img')->attr('src');
         $this->assertStringContainsString('uploads/0020.jpg', $lastMediaSrc);
     }
+
+    public function testShouldThrowExceptionWhenGuestNotFound(): void
+    {
+        // Utilisation d'un ID qui ne correspond à aucun invité existant.
+        $nonExistingGuestId = 9999;
+
+        // On envoie une requête vers la page de cet invité.
+        $this->get('/guest/' . $nonExistingGuestId);
+
+        // On vérifie que le code de réponse est 404 (Page Not Found).
+        $this->assertResponseStatusCodeSame(404);
+    }
 }

@@ -49,17 +49,29 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getOneOrNullResult();
     }
 
-    public function findGuests(): array
+    public function findPaginateGuests(int $limit = 25, int $offset = 0): array
     {
         return $this->createQueryBuilder('u')
             ->where('CONTAINS(TO_JSONB(u.roles), :role) = TRUE')
             ->setParameter('role', '["ROLE_USER"]')
             ->orderBy('u.id', 'ASC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
     }
 
-    public function findGuestsWithMediaCount(): array
+    public function countGuests(): int
+    {
+        return (int) $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->where('CONTAINS(TO_JSONB(u.roles), :role) = TRUE')
+            ->setParameter('role', '["ROLE_USER"]')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function findPaginateGuestsWithMediaCount(int $limit = 25, int $offset = 0): array
     {
         return $this->createQueryBuilder('u')
             ->select('u.id, u.name, COUNT(m.id) AS mediaCount')
@@ -70,6 +82,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->setParameter('role', '["ROLE_USER"]')
             ->groupBy('u.id, u.name')
             ->orderBy('u.id', 'ASC')
+            ->setMaxResults($limit)
+            ->setFirstResult($offset)
             ->getQuery()
             ->getResult();
     }
