@@ -26,7 +26,7 @@ class AppFixturesTests extends Fixture implements FixtureGroupInterface
 
     public function load(ObjectManager $manager): void
     {
-        // Création de l'administrateur.
+        // On crée un utilisateur administrateur.
         $userAdmin = new User();
 
         $userAdmin->setName('Ina Zaoui');
@@ -37,7 +37,7 @@ class AppFixturesTests extends Fixture implements FixtureGroupInterface
 
         $manager->persist($userAdmin);
 
-        // Création de 5 albums.
+        // On crée 5 albums pour l'administrateur.
         $albums = [];
         for ($i = 1; $i <= 5; $i++) {
             $album = new Album();
@@ -47,13 +47,13 @@ class AppFixturesTests extends Fixture implements FixtureGroupInterface
             $albums[] = $album;
         }
 
-        // Création de 10 médias pour l'administrateur (2 médias par album).
+        // On crée 10 médias pour l'administrateur (2 médias par album).
         $mediaCount = 1;
         foreach ($albums as $album) {
             for ($i = 1; $i <= 2; $i++) {
                 $media = new Media();
                 $media->setTitle('Titre ' . $mediaCount);
-                $media->setPath('uploads/' . str_pad($mediaCount, 4, '0', STR_PAD_LEFT) . '.jpg'); // ex. : 'uploads/0001.jpg'
+                $media->setPath('uploads/' . str_pad($mediaCount, 3, '0', STR_PAD_LEFT) . '.jpg'); // ex. : 'uploads/001.jpg'
                 $media->setUser($userAdmin);
                 $media->setAlbum($album);
                 $manager->persist($media);
@@ -61,7 +61,7 @@ class AppFixturesTests extends Fixture implements FixtureGroupInterface
             }
         }
 
-        // Création de 5 invités à l'accès activé.
+        // On crée 5 invités à l'accès activé.
         for ($i = 1; $i <= 5; $i++) {
             $userGuest = new User();
             $userGuest->setName('Invité ' . $i);
@@ -73,12 +73,12 @@ class AppFixturesTests extends Fixture implements FixtureGroupInterface
 
             $manager->persist($userGuest);
 
-            // Création de 10 médias pour chaque invité.
+            // On crée 10 médias pour chaque invité.
             $mediaCount = ($i - 1) * 10 + 11; // On a déjà créé 10 médias pour l'administrateur. On souhaite reprendre le compte à 11. Le premier invité ($i = 1) aura ses médias numérotés de 11 à 20, le deuxième invité ($i = 2) aura ses médias numérotés de 21 à 30 etc.
             for ($j = 1; $j <= 10; $j++) {
                 $media = new Media();
                 $media->setTitle('Titre ' . $mediaCount);
-                $media->setPath('uploads/' . str_pad($mediaCount, 4, '0', STR_PAD_LEFT) . '.jpg');
+                $media->setPath('uploads/' . str_pad($mediaCount, 3, '0', STR_PAD_LEFT) . '.jpg');
                 $media->setUser($userGuest);
                 $media->setAlbum(null); // Aucun album assigné pour les invités.
 
@@ -87,7 +87,7 @@ class AppFixturesTests extends Fixture implements FixtureGroupInterface
             }
         }
 
-        // Création de 5 invités à l'accès désactivé.
+        // On crée 5 invités à l'accès désactivé.
         for ($i = 6; $i <= 10; $i++) { // On a déjà créé 5 invités. On souhaite reprendre les identifiants à 6.
             $userGuest = new User();
             $userGuest->setName('Invité ' . $i);
@@ -99,12 +99,12 @@ class AppFixturesTests extends Fixture implements FixtureGroupInterface
 
             $manager->persist($userGuest);
 
-            // Création de 10 médias pour chaque invité.
+            // On crée 10 médias pour chaque invité.
             $mediaCount = ($i - 1) * 10 + 11;
             for ($j = 1; $j <= 10; $j++) { // On a déjà créé 10 médias pour l'administrateur et 5 * 10 médias pour les invités à l'accès activé. On souhaite reprendre à 61 les identifiants.
                 $media = new Media();
                 $media->setTitle('Titre ' . $mediaCount);
-                $media->setPath('uploads/' . str_pad($mediaCount, 4, '0', STR_PAD_LEFT) . '.jpg');
+                $media->setPath('uploads/' . str_pad($mediaCount, 3, '0', STR_PAD_LEFT) . '.jpg');
                 $media->setUser($userGuest);
                 $media->setAlbum(null);
 
