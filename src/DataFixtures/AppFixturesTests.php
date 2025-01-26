@@ -94,7 +94,7 @@ class AppFixturesTests extends Fixture implements FixtureGroupInterface
             $userGuest->setEmail('invite' . $i . '@example.com');
             $userGuest->setRoles(["ROLE_USER"]);
             $userGuest->setPassword($this->userPasswordHasher->hashPassword($userGuest, "password"));
-            $userGuest->setDescription('Le maître de l\'urbanité capturée, explore les méandres des cités avec un regard vif et impétueux, figeant l\'énergie des rues dans des instants éblouissants. À travers une technique avant-gardiste, il métamorphose le béton et l\'acier en toiles abstraites.');
+            $userGuest->setDescription('Description personnalisée...');
             $userGuest->setUserAccessEnabled(false);
 
             $manager->persist($userGuest);

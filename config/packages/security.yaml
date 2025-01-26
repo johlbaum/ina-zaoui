@@ -5,7 +5,7 @@ security:
         user_provider:
             entity:
                 class: App\Entity\User  
-                property: name  
+                property: email  
 
     firewalls:
         dev:
@@ -18,7 +18,9 @@ security:
             form_login:
                 login_path: admin_login
                 check_path: admin_login
-                default_target_path: admin_media_index
+                default_target_path: home
+                username_parameter: _email  
+                password_parameter: _password  
             logout:
                 path: app_logout
                 target: home

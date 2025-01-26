@@ -13,7 +13,7 @@ final class LoginTest extends FunctionalTestCase
         $this->assertResponseIsSuccessful();
 
         $this->client->submitForm('Connexion', [
-            '_username' => 'Ina Zaoui',
+            '_email' => 'ina@zaoui.com',
             '_password' => 'password',
         ]);
 
@@ -37,7 +37,7 @@ final class LoginTest extends FunctionalTestCase
         $this->assertResponseIsSuccessful();
 
         $this->client->submitForm('Connexion', [
-            '_username' => 'Ina Zaoui',
+            '_email' => 'ina@zaoui.com',
             '_password' => 'password fail',
         ]);
 
@@ -54,7 +54,7 @@ final class LoginTest extends FunctionalTestCase
         $this->assertResponseIsSuccessful();
 
         $this->client->submitForm('Connexion', [
-            '_username' => 'Invité 6', // Utilisateur dont l'accès est désactivé.
+            '_email' => 'invite6@example.com', // Utilisateur dont l'accès est désactivé.
             '_password' => 'password',
         ]);
 
