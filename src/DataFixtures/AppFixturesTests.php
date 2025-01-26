@@ -53,7 +53,7 @@ class AppFixturesTests extends Fixture implements FixtureGroupInterface
             for ($i = 1; $i <= 2; $i++) {
                 $media = new Media();
                 $media->setTitle('Titre ' . $mediaCount);
-                $media->setPath('uploads/' . str_pad($mediaCount, 3, '0', STR_PAD_LEFT) . '.jpg'); // ex. : 'uploads/001.jpg'
+                $media->setPath('uploads/' . str_pad($mediaCount, 4, '0', STR_PAD_LEFT) . '.jpg'); // ex. : 'uploads/0001.jpg'
                 $media->setUser($userAdmin);
                 $media->setAlbum($album);
                 $manager->persist($media);
@@ -68,7 +68,7 @@ class AppFixturesTests extends Fixture implements FixtureGroupInterface
             $userGuest->setEmail('invite' . $i . '@example.com');
             $userGuest->setRoles(["ROLE_USER"]);
             $userGuest->setPassword($this->userPasswordHasher->hashPassword($userGuest, "password"));
-            $userGuest->setDescription('Le maître de l\'urbanité capturée, explore les méandres des cités avec un regard vif et impétueux, figeant l\'énergie des rues dans des instants éblouissants. À travers une technique avant-gardiste, il métamorphose le béton et l\'acier en toiles abstraites.');
+            $userGuest->setDescription('Description personnalisée...');
             $userGuest->setUserAccessEnabled(true);
 
             $manager->persist($userGuest);
@@ -78,7 +78,7 @@ class AppFixturesTests extends Fixture implements FixtureGroupInterface
             for ($j = 1; $j <= 10; $j++) {
                 $media = new Media();
                 $media->setTitle('Titre ' . $mediaCount);
-                $media->setPath('uploads/' . str_pad($mediaCount, 3, '0', STR_PAD_LEFT) . '.jpg');
+                $media->setPath('uploads/' . str_pad($mediaCount, 4, '0', STR_PAD_LEFT) . '.jpg');
                 $media->setUser($userGuest);
                 $media->setAlbum(null); // Aucun album assigné pour les invités.
 
@@ -104,7 +104,7 @@ class AppFixturesTests extends Fixture implements FixtureGroupInterface
             for ($j = 1; $j <= 10; $j++) { // On a déjà créé 10 médias pour l'administrateur et 5 * 10 médias pour les invités à l'accès activé. On souhaite reprendre à 61 les identifiants.
                 $media = new Media();
                 $media->setTitle('Titre ' . $mediaCount);
-                $media->setPath('uploads/' . str_pad($mediaCount, 3, '0', STR_PAD_LEFT) . '.jpg');
+                $media->setPath('uploads/' . str_pad($mediaCount, 4, '0', STR_PAD_LEFT) . '.jpg');
                 $media->setUser($userGuest);
                 $media->setAlbum(null);
 

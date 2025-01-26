@@ -21,7 +21,7 @@ class AppFixtures extends Fixture implements FixtureGroupInterface
 
     public static function getGroups(): array
     {
-        return ['production'];
+        return ['development'];
     }
 
     public function load(ObjectManager $manager): void
@@ -46,7 +46,7 @@ class AppFixtures extends Fixture implements FixtureGroupInterface
                 for ($j = 1; $j <= 30; $j++) {
                     $media = new Media();
                     $media->setTitle('Titre ' . $j);
-                    $media->setPath('uploads/' . str_pad($j, 3, '0', STR_PAD_LEFT) . '.jpg'); // ex. : 'uploads/001.jpg'
+                    $media->setPath('uploads/' . str_pad($j, 4, '0', STR_PAD_LEFT) . '.jpg'); // ex. : 'uploads/0001.jpg'
                     $media->setUser($userGuest);
                     $media->setAlbum(null);
 
@@ -95,7 +95,7 @@ class AppFixtures extends Fixture implements FixtureGroupInterface
         for ($i = 1; $i <= 150; $i++) {
             $media = new Media();
             $media->setTitle('Titre ' . $i);
-            $media->setPath('uploads/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '.jpg');
+            $media->setPath('uploads/' . str_pad($i, 4, '0', STR_PAD_LEFT) . '.jpg');
             $media->setUser($userAdmin);
 
             // On attribue les médias à des albums, 30 par album.
