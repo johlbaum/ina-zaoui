@@ -51,7 +51,7 @@ class MediaController extends AbstractController
         $mediaList = $this->mediaRepository->findPaginateMediaList($paginationParams['limit'], $paginationParams['offset'], null, $criteria['user'] ?? null);
 
         // On calcule le nombre total de pages nécessaires pour afficher les médias (tous les médias ou uniquement ceux de l'invité).
-        $totalMedia = $this->mediaRepository->countMedia($criteria['user'] ?? null);
+        $totalMedia = $this->mediaRepository->countMedia(null, $criteria['user'] ?? null);
         $totalPages = $paginationService->getTotalPages($totalMedia, $paginationParams['limit']);
 
         return $this->render('admin/media/index.html.twig', [
