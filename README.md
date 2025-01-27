@@ -1,4 +1,4 @@
-<img src="public/images/home.png" alt="CritiPixel" width="200" />
+<img src="public/images/home.jpeg" alt="CritiPixel" width="200" />
 
 # Optimisation du site d'Ina Zaoui
 
