@@ -26,6 +26,8 @@ class MediaRepository extends ServiceEntityRepository
     public function findPaginateMediaList(int $limit = 25, int $offset = 0, ?Album $album = null, ?User $user = null): array
     {
         $qb = $this->createQueryBuilder('m')
+            ->leftJoin('m.user', 'u')
+            ->addSelect('u')
             ->orderBy('m.id', 'ASC')
             ->setFirstResult($offset)
             ->setMaxResults($limit);

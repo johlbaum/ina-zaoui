@@ -36,7 +36,7 @@ class GuestController extends AbstractController
     {
         $paginationParams = $paginationService->getPaginationParams($request, 25);
 
-        // On récupère la liste de tous les invités (rôle USER).
+        // On récupère la liste de tous les invités (rôle USER) par tranche de 25.
         $guests = $this->userRepository->findPaginateGuests($paginationParams['limit'], $paginationParams['offset']);
 
         // On calcule le nombre total de pages nécessaires pour afficher tous les invités.

@@ -36,15 +36,15 @@
 								<a class="nav-link" href="{{ path('admin_login') }}">Connexion</a>
 							{% endif %}
 						</li>
-					</ul>
-				</div>
+					</li>
+				</ul>
 			</div>
-		</nav>
-	</header>
-	<main>
-		<div class="container py-4">
-			{% block front %}{% endblock %}
 		</div>
-	</main>
-	<footer class="py-4 text-center">Ina Zaoui copyright 2025©</footer>
-{% endblock %}
+	</nav>
+</header>
+<main>
+	<div class="container py-4">
+		{% block front %}{% endblock %}
+	</div>
+</main>
+<footer class="py-4 text-center">Ina Zaoui copyright 2025©</footer>{% endblock %}

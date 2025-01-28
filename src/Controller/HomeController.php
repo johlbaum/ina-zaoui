@@ -54,7 +54,7 @@ class HomeController extends AbstractController
         $guests = $this->userRepository->findPaginateGuestsWithMediaCount($paginationParams['limit'], $paginationParams['offset']);
 
         // On calcule le nombre total de pages nécessaires pour afficher tous les invités.
-        $totalGuests = $this->userRepository->countGuests();
+        $totalGuests = $this->userRepository->countGuestsWithAccessEnabled();
         $totalPages = $this->paginationService->getTotalPages($totalGuests, $paginationParams['limit']);
 
         return $this->render('front/guests.html.twig', [
@@ -74,7 +74,7 @@ class HomeController extends AbstractController
     #[Route("/guest/{id}", name: "guest")]
     public function guest(Request $request, int $id)
     {
-        $paginationParams = $this->paginationService->getPaginationParams($request, 25);
+        $paginationParams = $this->paginationService->getPaginationParams($request, 9);
 
         // On récupère l'invité par son ID parmi la liste des invités (rôle USER) dont l'accès est activé.
         $guest = $this->userRepository->find($id);
@@ -82,7 +82,7 @@ class HomeController extends AbstractController
             throw $this->createNotFoundException('Invité non trouvé.');
         }
 
-        // On récupère les médias associés à l'invité par tranche de 25.
+        // On récupère les médias associés à l'invité par tranche de 9.
         $mediaList = $this->mediaRepository->findPaginateMediaList($paginationParams['limit'], $paginationParams['offset'], null, $guest);
 
         // On calcule le nombre total de pages nécessaires pour afficher les médias de l'invité.
@@ -107,16 +107,16 @@ class HomeController extends AbstractController
     #[Route("/portfolio/{id?}", name: "portfolio")]
     public function portfolio(Request $request, ?int $id = null)
     {
-        $paginationParams = $this->paginationService->getPaginationParams($request, 12);
+        $paginationParams = $this->paginationService->getPaginationParams($request, 9);
 
-        // Si un ID d'album est fourni, on récupère tous les médias de cet album. Sinon, on récupère tous les médias de tous les albums.
+        // Si un ID d'album est fourni, on récupère l'album correspondant. Sinon, on récupère tous les albums.
         $albums = $this->albumRepository->findAll();
         $album = $id ? $this->albumRepository->find($id) : null;
 
         // On récupère l'administrateur (rôle ADMIN).
         $admin = $this->userRepository->findAdminUser();
 
-        // On récupère les médias associés à l'administrateur par tranche de 25.
+        // On récupère les médias associés à l'administrateur par tranche de 9.
         $mediaList = $this->mediaRepository->findPaginateMediaList($paginationParams['limit'], $paginationParams['offset'], $album, $admin);
 
         // On calcule le nombre total de pages nécessaires pour afficher les médias de l'administrateur.
