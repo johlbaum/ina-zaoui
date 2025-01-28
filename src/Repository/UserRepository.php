@@ -71,6 +71,18 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getSingleScalarResult();
     }
 
+    public function countGuestsWithAccessEnabled(): int
+    {
+        return (int) $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->where('u.userAccessEnabled = :enabled')
+            ->andWhere('CONTAINS(TO_JSONB(u.roles), :role) = TRUE')
+            ->setParameter('enabled', true)
+            ->setParameter('role', '["ROLE_USER"]')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     public function findPaginateGuestsWithMediaCount(int $limit = 25, int $offset = 0): array
     {
         return $this->createQueryBuilder('u')
