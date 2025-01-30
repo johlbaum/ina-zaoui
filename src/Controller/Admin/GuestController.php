@@ -4,7 +4,9 @@ namespace App\Controller\Admin;
 
 use App\Entity\User;
 use App\Form\GuestType;
+use App\Repository\MediaRepository;
 use App\Repository\UserRepository;
+use App\Service\FileManager;
 use App\Service\PaginationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -76,8 +78,19 @@ class GuestController extends AbstractController
      * @return Response La réponse HTTP
      */
     #[Route('/admin/guest/delete/{id}', name: 'admin_guest_delete', methods: ['GET'])]
-    public function delete(User $guest): Response
+    public function delete(User $guest, MediaRepository $mediaRepository, FileManager $fileManager): Response
     {
+        // On récupère les médias de l'invité.
+        $mediaList = $mediaRepository->findBy(['user' => $guest]);
+
+        // On supprime les médias (fichiers) associés du disque.
+        foreach ($mediaList as $media) {
+            $filePath = $fileManager->getFilePath($media->getPath());
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+        }
+
         $this->entityManager->remove($guest);
         $this->entityManager->flush();
 
