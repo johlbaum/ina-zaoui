@@ -2,8 +2,7 @@
 
 Ce document détaille les règles à suivre pour contribuer  au projet.
 
-
-## Conventions de nommage des branches 
+## Conventions de nommage des branches et des commits
 
 ### Branches
 
@@ -19,6 +18,16 @@ Exemples :
 ```text
 feature/ajout-authentification
 fix/correction-bug-paiement
+```
+
+### Commits
+
+Utilisez des messages de commit clairs et concis.
+
+Exemples :
+```text
+Ajout de l'authentification par token JWT.
+Correction du calcul de TVA dans la page de paiement.
 ```
 
 ## Procédure pour contribuer au projet
@@ -50,8 +59,6 @@ fix/correction-bug-paiement
    
    - Ajoutez une description détaillée de vos modifications, le problème qu'elles résolvent et les tests effectués.
 
-
-
 ## Validation des contributions
 
 **Pour qu'une contribution soit acceptée :**
@@ -59,6 +66,8 @@ fix/correction-bug-paiement
 - Tous les tests doivent passer sans erreur.
 
 - Le code doit respecter les standards PSR-12.
+
+- La Pull Request doit être validée par au moins un reviewer.
 
 
 ## Bonnes pratiques
@@ -69,12 +78,19 @@ fix/correction-bug-paiement
 
 - **Documentation** : ajoutez une documentation pour expliquer vos modifications.
 
+## Workflow GitHub (Issues, Pull Requests, Code Review)
+
+- **Issues** : Avant de créer une issue, vérifiez qu'une issue similaire n'existe pas déjà.
+
+- **Pull Requests** : Suivez les conventions de commits et nommez vos PR de façon explicite.
+
+- **Code Review** : Attendez les retours du reviewer et appliquez les suggestions si nécessaires.
+
 ## Soumettre des problèmes
 
 - **Recherchez dans les issues existantes** : vérifiez si votre problème n'a pas déjà été signalé.
 
 - **Créez une nouvelle issue** : fournissez un titre clair et décrivez le problème en détail (étapes pour reproduire le problème, comportement attendu et observé).
-     
 
 ## Proposer des fonctionnalités
 
