@@ -24,7 +24,7 @@ class AlbumController extends AbstractController
     /**
      * Affiche la liste des albums.
      */
-    #[Route("/admin/album", name: "admin_album_index")]
+    #[Route('/admin/album', name: 'admin_album_index')]
     public function index()
     {
         $albums = $this->albumRepository->findAll();
@@ -36,9 +36,10 @@ class AlbumController extends AbstractController
      * Ajoute un nouvel album.
      *
      * @param Request $request : la requête HTTP contenant les données du formulaire
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route("/admin/album/add", name: "admin_album_add")]
+    #[Route('/admin/album/add', name: 'admin_album_add')]
     public function add(Request $request)
     {
         $album = new Album();
@@ -54,7 +55,7 @@ class AlbumController extends AbstractController
         }
 
         return $this->render('admin/album/add.html.twig', [
-            'form' => $form
+            'form' => $form,
         ]);
     }
 
@@ -62,15 +63,16 @@ class AlbumController extends AbstractController
      * Met à jour un album existant.
      *
      * @param Request $request : la requête HTTP contenant les données du formulaire
-     * @param int $id : l'identifiant de l'album à mettre à jour
+     * @param int     $id      : l'identifiant de l'album à mettre à jour
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route("/admin/album/update/{id}", name: "admin_album_update")]
+    #[Route('/admin/album/update/{id}', name: 'admin_album_update')]
     public function update(Request $request, int $id)
     {
         $album = $this->albumRepository->find($id);
         if (!$album) {
-            throw $this->createNotFoundException("L'album avec l'ID " . $id . " n'existe pas.");
+            throw $this->createNotFoundException("L'album avec l'ID ".$id." n'existe pas.");
         }
 
         $form = $this->createForm(AlbumType::class, $album);
@@ -83,7 +85,7 @@ class AlbumController extends AbstractController
         }
 
         return $this->render('admin/album/update.html.twig', [
-            'form' => $form
+            'form' => $form,
         ]);
     }
 
@@ -91,14 +93,15 @@ class AlbumController extends AbstractController
      * Supprime un album existant.
      *
      * @param int $id : l'identifiant de l'album à supprimer
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route("/admin/album/delete/{id}", name: "admin_album_delete")]
+    #[Route('/admin/album/delete/{id}', name: 'admin_album_delete')]
     public function delete(int $id)
     {
         $album = $this->albumRepository->find($id);
         if (!$album) {
-            throw $this->createNotFoundException("L'album avec l'ID " . $id . " n'existe pas.");
+            throw $this->createNotFoundException("L'album avec l'ID ".$id." n'existe pas.");
         }
 
         $this->entityManager->remove($album);

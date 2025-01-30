@@ -30,7 +30,6 @@ final class LoginTest extends FunctionalTestCase
         self::assertFalse($authorizationChecker->isGranted('IS_AUTHENTICATED'));
     }
 
-
     public function testThatLoginShouldFailed(): void
     {
         $this->get('/login');

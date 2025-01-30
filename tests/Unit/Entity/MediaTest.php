@@ -2,9 +2,9 @@
 
 namespace App\Tests\Unit\Entity;
 
+use App\Entity\Album;
 use App\Entity\Media;
 use App\Entity\User;
-use App\Entity\Album;
 use PHPUnit\Framework\TestCase;
 
 class MediaTest extends TestCase

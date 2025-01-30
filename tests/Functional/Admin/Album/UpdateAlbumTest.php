@@ -16,7 +16,7 @@ class UpdateAlbumTest extends FunctionalTestCase
         $album = $albumRepository->find(1);
         $this->assertNotNull($album);
 
-        $crawler = $this->get('/admin/album/update/' . $album->getId());
+        $crawler = $this->get('/admin/album/update/'.$album->getId());
         $this->assertResponseIsSuccessful();
 
         $form = $crawler->selectButton('Modifier')->form();

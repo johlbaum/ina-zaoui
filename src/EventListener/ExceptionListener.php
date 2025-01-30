@@ -27,8 +27,8 @@ class ExceptionListener
             $statusCode = Response::HTTP_NOT_FOUND;
             $statusText = 'Page non trouvée';
             $message = "Le contenu que vous recherchez n'existe pas ou a été supprimé.";
-            // Si l'exception n'est pas une instance de HttpExceptionInterface (par exemple, TypeError),
-            // on la traite comme une erreur interne du serveur (erreur 500).
+        // Si l'exception n'est pas une instance de HttpExceptionInterface (par exemple, TypeError),
+        // on la traite comme une erreur interne du serveur (erreur 500).
         } elseif (!$exception instanceof HttpExceptionInterface) {
             $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR;
             $statusText = 'Erreur interne du serveur';

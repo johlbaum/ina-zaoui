@@ -25,8 +25,8 @@ class AddMediaTest extends FunctionalTestCase
         $form = $crawler->filter('form')->form();
         $form['media[user]'] = $user->getId();
         $form['media[album]'] = $album->getId();
-        $form['media[title]'] = "Un média de test";
-        $form['media[file]'] = __DIR__ . '/../../../Fixtures/images/test_file.jpeg';
+        $form['media[title]'] = 'Un média de test';
+        $form['media[file]'] = __DIR__.'/../../../Fixtures/images/test_file.jpeg';
         $this->client->submit($form);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
@@ -48,8 +48,8 @@ class AddMediaTest extends FunctionalTestCase
         $this->assertResponseIsSuccessful();
 
         $form = $crawler->filter('form')->form();
-        $form['media[title]'] = "Un média de test";
-        $form['media[file]'] = __DIR__ . '/../../../Fixtures/images/test_file.jpeg';
+        $form['media[title]'] = 'Un média de test';
+        $form['media[file]'] = __DIR__.'/../../../Fixtures/images/test_file.jpeg';
         $this->client->submit($form);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);

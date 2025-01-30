@@ -4,8 +4,8 @@ namespace App\Tests\Unit\Repository;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use App\Tests\Functional\FunctionalTestCase;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 class UserRepositoryTest extends FunctionalTestCase
@@ -36,7 +36,7 @@ class UserRepositoryTest extends FunctionalTestCase
     {
         $this->expectException(UnsupportedUserException::class);
 
-        // On génère un mock d'un objet implémentant PasswordAuthenticatedUserInterface 
+        // On génère un mock d'un objet implémentant PasswordAuthenticatedUserInterface
         // sans que ce soit une instance de la classe User.
         $mockPasswordUser = $this->createMock(PasswordAuthenticatedUserInterface::class);
 

@@ -14,7 +14,7 @@ class ShowGuestTest extends FunctionalTestCase
         $guests = $userRepository->findGuestsWithEnabledAccess();
         $guest = $guests[0];
 
-        $crawler = $this->get('/guest/' . $guest->getId());
+        $crawler = $this->get('/guest/'.$guest->getId());
         $this->assertResponseIsSuccessful();
 
         // On vérifie que la page contient le nom de l'invité.
@@ -42,7 +42,7 @@ class ShowGuestTest extends FunctionalTestCase
         $nonExistingGuestId = 9999;
 
         // On envoie une requête vers la page de cet invité.
-        $this->get('/guest/' . $nonExistingGuestId);
+        $this->get('/guest/'.$nonExistingGuestId);
 
         // On vérifie que le code de réponse est 404 (Page Not Found).
         $this->assertResponseStatusCodeSame(404);

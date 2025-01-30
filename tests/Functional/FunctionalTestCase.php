@@ -28,9 +28,10 @@ abstract class FunctionalTestCase extends WebTestCase
     /**
      * Effectue une requête HTTP GET sur une URI donnée.
      *
-     * @param string $uri : l'URI à laquelle envoyer la requête GET.
-     * @param array $parameters : les paramètres de la requête (optionnels).
-     * @return Crawler : le crawler contenant la réponse de la requête.
+     * @param string $uri        : l'URI à laquelle envoyer la requête GET
+     * @param array  $parameters : les paramètres de la requête (optionnels)
+     *
+     * @return Crawler : le crawler contenant la réponse de la requête
      */
     protected function get(string $uri, array $parameters = []): Crawler
     {
@@ -40,9 +41,10 @@ abstract class FunctionalTestCase extends WebTestCase
     /**
      * Effectue une requête HTTP DELETE sur une URI donnée.
      *
-     * @param string $uri : l'URI à laquelle envoyer la requête DELETE.
-     * @param array $parameters : les paramètres de la requête (optionnels).
-     * @return Crawler : le crawler contenant la réponse de la requête.
+     * @param string $uri        : l'URI à laquelle envoyer la requête DELETE
+     * @param array  $parameters : les paramètres de la requête (optionnels)
+     *
+     * @return Crawler : le crawler contenant la réponse de la requête
      */
     protected function delete(string $uri, array $parameters = []): Crawler
     {

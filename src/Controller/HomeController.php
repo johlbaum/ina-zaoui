@@ -7,8 +7,8 @@ use App\Repository\MediaRepository;
 use App\Repository\UserRepository;
 use App\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 class HomeController extends AbstractController
 {
@@ -21,7 +21,7 @@ class HomeController extends AbstractController
         UserRepository $userRepository,
         AlbumRepository $albumRepository,
         MediaRepository $mediaRepository,
-        PaginationService $paginationService
+        PaginationService $paginationService,
     ) {
         $this->userRepository = $userRepository;
         $this->albumRepository = $albumRepository;
@@ -32,7 +32,7 @@ class HomeController extends AbstractController
     /**
      * Affiche la page d'accueil.
      */
-    #[Route("/", name: "home")]
+    #[Route('/', name: 'home')]
     public function home()
     {
         return $this->render('front/home.html.twig');
@@ -42,14 +42,15 @@ class HomeController extends AbstractController
      * Affiche la liste des invités.
      *
      * @param Request $request : la requête HTTP contenant les paramètres de pagination
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route("/guests", name: "guests")]
+    #[Route('/guests', name: 'guests')]
     public function guests(Request $request)
     {
         $paginationParams = $this->paginationService->getPaginationParams($request, 25);
 
-        // On récupère le nom et le nombre total de médias associés de tous les invités (rôles USER) 
+        // On récupère le nom et le nombre total de médias associés de tous les invités (rôles USER)
         // dont l'accès est activé par tranche de 25.
         $guests = $this->userRepository->findPaginateGuestsWithMediaCount($paginationParams['limit'], $paginationParams['offset']);
 
@@ -60,7 +61,7 @@ class HomeController extends AbstractController
         return $this->render('front/guests.html.twig', [
             'guests' => $guests,
             'page' => $paginationParams['page'],
-            'totalPages' => $totalPages
+            'totalPages' => $totalPages,
         ]);
     }
 
@@ -68,10 +69,11 @@ class HomeController extends AbstractController
      * Affiche les détails d'un invité spécifique.
      *
      * @param Request $request : la requête HTTP contenant les paramètres de pagination
-     * @param int $id : l'identifiant de l'invité
+     * @param int     $id      : l'identifiant de l'invité
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route("/guest/{id}", name: "guest")]
+    #[Route('/guest/{id}', name: 'guest')]
     public function guest(Request $request, int $id)
     {
         $paginationParams = $this->paginationService->getPaginationParams($request, 12);
@@ -79,7 +81,7 @@ class HomeController extends AbstractController
         // On récupère l'invité par son ID parmi la liste des invités (rôle USER) dont l'accès est activé.
         $guest = $this->userRepository->find($id);
         if (!$guest) {
-            throw $this->createNotFoundException("L'invité " . $id . " n'existe pas.");
+            throw $this->createNotFoundException("L'invité ".$id." n'existe pas.");
         }
 
         // On récupère les médias associés à l'invité par tranche de 12.
@@ -93,18 +95,19 @@ class HomeController extends AbstractController
             'guest' => $guest,
             'mediaList' => $mediaList,
             'page' => $paginationParams['page'],
-            'totalPages' => $totalPages
+            'totalPages' => $totalPages,
         ]);
     }
 
     /**
      * Affiche le portfolio, avec ou sans un album spécifique.
      *
-     * @param Request $request : la requête HTTP contenant les paramètres de pagination
-     * @param int|null $id : l'identifiant de l'album 
+     * @param Request  $request : la requête HTTP contenant les paramètres de pagination
+     * @param int|null $id      : l'identifiant de l'album
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route("/portfolio/{id?}", name: "portfolio")]
+    #[Route('/portfolio/{id?}', name: 'portfolio')]
     public function portfolio(Request $request, ?int $id = null)
     {
         $paginationParams = $this->paginationService->getPaginationParams($request, 12);
@@ -113,7 +116,7 @@ class HomeController extends AbstractController
         $albums = $this->albumRepository->findAll();
         $album = $id ? $this->albumRepository->find($id) : null;
         if ($id && !$album) {
-            throw $this->createNotFoundException("L'album avec l'ID " . $id . " n'existe pas.");
+            throw $this->createNotFoundException("L'album avec l'ID ".$id." n'existe pas.");
         }
 
         // On récupère l'administrateur (rôle ADMIN).
@@ -131,14 +134,14 @@ class HomeController extends AbstractController
             'album' => $album,
             'mediaList' => $mediaList,
             'totalPages' => $totalPages,
-            'page' => $paginationParams['page']
+            'page' => $paginationParams['page'],
         ]);
     }
 
     /**
      * Affiche la page "À propos".
      */
-    #[Route("/about", name: "about")]
+    #[Route('/about', name: 'about')]
     public function about()
     {
         return $this->render('front/about.html.twig');
@@ -147,7 +150,7 @@ class HomeController extends AbstractController
     /**
      * Affiche la page d'administration.
      */
-    #[Route("/admin", name: "admin")]
+    #[Route('/admin', name: 'admin')]
     public function admin()
     {
         return $this->render('admin.html.twig');

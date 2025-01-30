@@ -12,10 +12,10 @@ class DeleteMediaTest extends FunctionalTestCase
     public function testShouldDeleteMediaByAdmin(): void
     {
         // On indique le chemin vers le fichier source que l'on souhaite dupliquer.
-        $sourceFile = self::getContainer()->getParameter('kernel.project_dir') . '/tests/Fixtures/images/test_file.jpeg';
+        $sourceFile = self::getContainer()->getParameter('kernel.project_dir').'/tests/Fixtures/images/test_file.jpeg';
 
         // On définit où le fichier temporaire sera stocké et quel nom il aura.
-        $tempFile = self::getContainer()->getParameter('kernel.project_dir') . '/tests/Fixtures/images/test_file_temp.jpeg';
+        $tempFile = self::getContainer()->getParameter('kernel.project_dir').'/tests/Fixtures/images/test_file_temp.jpeg';
 
         // On copie le fichier source dans le répertoire de test.
         copy($sourceFile, $tempFile);
@@ -37,7 +37,7 @@ class DeleteMediaTest extends FunctionalTestCase
 
         $this->login();
 
-        $this->delete('/admin/media/delete/' . $media->getId());
+        $this->delete('/admin/media/delete/'.$media->getId());
 
         $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
 
@@ -51,10 +51,10 @@ class DeleteMediaTest extends FunctionalTestCase
     public function testShouldDeleteMediaByGuest(): void
     {
         // On indique le chemin vers le fichier source que l'on souhaite dupliquer.
-        $sourceFile = self::getContainer()->getParameter('kernel.project_dir') . '/tests/Fixtures/images/test_file.jpeg';
+        $sourceFile = self::getContainer()->getParameter('kernel.project_dir').'/tests/Fixtures/images/test_file.jpeg';
 
         // On définit où le fichier temporaire sera stocké et quel nom il aura.
-        $tempFile = self::getContainer()->getParameter('kernel.project_dir') . '/tests/Fixtures/images/test_file_temp.jpeg';
+        $tempFile = self::getContainer()->getParameter('kernel.project_dir').'/tests/Fixtures/images/test_file_temp.jpeg';
 
         // On copie le fichier source dans le répertoire de test.
         copy($sourceFile, $tempFile);
@@ -76,7 +76,7 @@ class DeleteMediaTest extends FunctionalTestCase
 
         $this->login('invite1@example.com');
 
-        $this->delete('/admin/media/delete/' . $media->getId());
+        $this->delete('/admin/media/delete/'.$media->getId());
 
         $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
 

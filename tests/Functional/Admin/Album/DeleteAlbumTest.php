@@ -16,7 +16,7 @@ class DeleteAlbumTest extends FunctionalTestCase
         $album = $albumRepository->find(1);
         $this->assertNotNull($album);
 
-        $this->delete('/admin/album/delete/' . $album->getId());
+        $this->delete('/admin/album/delete/'.$album->getId());
 
         $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
 

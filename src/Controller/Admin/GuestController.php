@@ -6,12 +6,12 @@ use App\Entity\User;
 use App\Form\GuestType;
 use App\Repository\UserRepository;
 use App\Service\PaginationService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\Annotation\Route;
 
 class GuestController extends AbstractController
 {
@@ -27,11 +27,12 @@ class GuestController extends AbstractController
     /**
      * Affiche la liste des invités.
      *
-     * @param Request $request : la requête HTTP contenant les paramètres de pagination
+     * @param Request           $request           : la requête HTTP contenant les paramètres de pagination
      * @param PaginationService $paginationService : le service responsable de la gestion de la pagination
+     *
      * @return Response : la réponse HTTP
      */
-    #[Route("/admin/guest", name: "admin_guest_index")]
+    #[Route('/admin/guest', name: 'admin_guest_index')]
     public function index(Request $request, PaginationService $paginationService): Response
     {
         $paginationParams = $paginationService->getPaginationParams($request, 25);
@@ -46,7 +47,7 @@ class GuestController extends AbstractController
         return $this->render('admin/guest/index.html.twig', [
             'guests' => $guests,
             'page' => $paginationParams['page'],
-            'totalPages' => $totalPages
+            'totalPages' => $totalPages,
         ]);
     }
 
@@ -54,9 +55,10 @@ class GuestController extends AbstractController
      * Active ou désactive l'accès d'un utilisateur invité.
      *
      * @param User $guest L'utilisateur invité dont on modifie l'accès
+     *
      * @return Response : la réponse HTTP
      */
-    #[Route("/admin/guest/toggle_access/{id}", name: "admin_guest_toggle_access", methods: ["GET"])]
+    #[Route('/admin/guest/toggle_access/{id}', name: 'admin_guest_toggle_access', methods: ['GET'])]
     public function toggleGuestAccess(User $guest): Response
     {
         $guest->setUserAccessEnabled(!$guest->isUserAccessEnabled());
@@ -70,9 +72,10 @@ class GuestController extends AbstractController
      * Supprime un utilisateur invité.
      *
      * @param User $guest : l'utilisateur invité à supprimer
+     *
      * @return Response La réponse HTTP
      */
-    #[Route("/admin/guest/delete/{id}", name: "admin_guest_delete", methods: ["GET"])]
+    #[Route('/admin/guest/delete/{id}', name: 'admin_guest_delete', methods: ['GET'])]
     public function delete(User $guest): Response
     {
         $this->entityManager->remove($guest);
@@ -84,11 +87,12 @@ class GuestController extends AbstractController
     /**
      * Ajoute un nouvel invité.
      *
-     * @param Request $request : la requête HTTP contenant les données du formulaire
+     * @param Request                     $request        : la requête HTTP contenant les données du formulaire
      * @param UserPasswordHasherInterface $passwordHasher : le service pour hasher les mots de passe
+     *
      * @return Response : la réponse HTTP
      */
-    #[Route("/admin/guest/add", name: "admin_guest_add")]
+    #[Route('/admin/guest/add', name: 'admin_guest_add')]
     public function add(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
         $guest = new User();

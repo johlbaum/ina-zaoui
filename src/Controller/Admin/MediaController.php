@@ -21,7 +21,7 @@ class MediaController extends AbstractController
     public function __construct(
         MediaRepository $mediaRepository,
         EntityManagerInterface $entityManager,
-        FileManager $fileManager
+        FileManager $fileManager,
     ) {
         $this->mediaRepository = $mediaRepository;
         $this->entityManager = $entityManager;
@@ -31,11 +31,12 @@ class MediaController extends AbstractController
     /**
      * Affiche la liste des médias dans l'espace administrateur.
      *
-     * @param Request $request : la requête HTTP contenant les paramètres de pagination
+     * @param Request           $request           : la requête HTTP contenant les paramètres de pagination
      * @param PaginationService $paginationService : le service de gestion de la pagination
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route("/admin/media", name: "admin_media_index")]
+    #[Route('/admin/media', name: 'admin_media_index')]
     public function index(Request $request, PaginationService $paginationService)
     {
         $paginationParams = $paginationService->getPaginationParams($request, 25);
@@ -57,7 +58,7 @@ class MediaController extends AbstractController
         return $this->render('admin/media/index.html.twig', [
             'mediaList' => $mediaList,
             'page' => $paginationParams['page'],
-            'totalPages' => $totalPages
+            'totalPages' => $totalPages,
         ]);
     }
 
@@ -65,9 +66,10 @@ class MediaController extends AbstractController
      * Ajoute un nouveau média.
      *
      * @param Request $request : la requête HTTP contenant les données du formulaire
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route("/admin/media/add", name: "admin_media_add")]
+    #[Route('/admin/media/add', name: 'admin_media_add')]
     public function add(Request $request)
     {
         $media = new Media();
@@ -80,7 +82,7 @@ class MediaController extends AbstractController
             }
 
             // On génère un nom unique pour le fichier image en utilisant un hash.
-            $filename = md5(uniqid()) . '.' . $media->getFile()->guessExtension();
+            $filename = md5(uniqid()).'.'.$media->getFile()->guessExtension();
 
             // On définit le chemin complet du fichier image, en fonction de l'environnement (prod ou test).
             $media->setPath($this->fileManager->getFilePath($filename));
@@ -101,14 +103,15 @@ class MediaController extends AbstractController
      * Supprime un média et son fichier associé.
      *
      * @param int $id : l'identifiant du média à supprimer
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[Route("/admin/media/delete/{id}", name: "admin_media_delete")]
+    #[Route('/admin/media/delete/{id}', name: 'admin_media_delete')]
     public function delete(int $id)
     {
         $media = $this->mediaRepository->find($id);
         if (!$media) {
-            throw $this->createNotFoundException("Le média avec l'ID " . $id . " n'existe pas.");
+            throw $this->createNotFoundException("Le média avec l'ID ".$id." n'existe pas.");
         }
 
         // On récupère le chemin complet du fichier image en fonction de l'environnement (prod ou test).

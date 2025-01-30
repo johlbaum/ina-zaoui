@@ -13,7 +13,7 @@ class ShowMediaTest extends FunctionalTestCase
         $albumRepository = $this->getContainer()->get(AlbumRepository::class);
         $album = $albumRepository->findOneBy(['name' => 'Album 1']);
 
-        $crawler = $this->get('/portfolio/' . $album->getId());
+        $crawler = $this->get('/portfolio/'.$album->getId());
         $this->assertResponseIsSuccessful();
 
         // On vérifie que seuls les médias de cet album sont affichés (2 médias dans l'album 1).

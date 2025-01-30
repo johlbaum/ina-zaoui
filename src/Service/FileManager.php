@@ -17,21 +17,22 @@ class FileManager
      * Retourne le chemin complet du fichier en fonction de l'environnement.
      *
      * @param string $filename : le nom du fichier
+     *
      * @return string : le chemin complet du fichier
      */
     public function getFilePath(string $filename): string
     {
-        if ($this->kernel->getEnvironment() === 'test') {
-            return 'tests/Fixtures/images/' . $filename;
+        if ('test' === $this->kernel->getEnvironment()) {
+            return 'tests/Fixtures/images/'.$filename;
         }
 
         // Si le fichier commence déjà par 'uploads/', on retourne ce chemin sans modification.
-        if (strpos($filename, 'uploads/') === 0) {
+        if (0 === strpos($filename, 'uploads/')) {
             return $filename;
         }
 
         // Sinon, on ajoutee le préfixe 'uploads/'.
-        return 'uploads/' . $filename;
+        return 'uploads/'.$filename;
     }
 
     /**
@@ -41,10 +42,10 @@ class FileManager
      */
     public function getFileDirectory(): string
     {
-        if ($this->kernel->getEnvironment() === 'test') {
-            return $this->kernel->getProjectDir() . '/tests/Fixtures/images/';
+        if ('test' === $this->kernel->getEnvironment()) {
+            return $this->kernel->getProjectDir().'/tests/Fixtures/images/';
         }
 
-        return $this->kernel->getProjectDir() . '/public/uploads/';
+        return $this->kernel->getProjectDir().'/public/uploads/';
     }
 }

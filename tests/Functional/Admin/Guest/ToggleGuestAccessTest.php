@@ -21,7 +21,7 @@ class ToggleGuestAccessTest extends FunctionalTestCase
         $crawler = $this->client->request('GET', '/admin/guest');
         $this->assertResponseIsSuccessful();
 
-        $link = $crawler->filter('a.btn.btn-warning[href="/admin/guest/toggle_access/' . $guest->getId() . '"]')->link();
+        $link = $crawler->filter('a.btn.btn-warning[href="/admin/guest/toggle_access/'.$guest->getId().'"]')->link();
 
         $crawler = $this->client->click($link);
 
@@ -34,7 +34,7 @@ class ToggleGuestAccessTest extends FunctionalTestCase
 
         $crawler = $this->client->getCrawler();
 
-        $textLink = $crawler->filter('a.btn.btn-warning[href="/admin/guest/toggle_access/' . $guest->getId() . '"]')->text();
+        $textLink = $crawler->filter('a.btn.btn-warning[href="/admin/guest/toggle_access/'.$guest->getId().'"]')->text();
         $this->assertEquals('Activer l\'accès', $textLink);
     }
 }

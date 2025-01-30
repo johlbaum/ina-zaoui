@@ -19,7 +19,7 @@ class DeleteGuestTest extends FunctionalTestCase
         $crawler = $this->get('/admin/guest');
         $this->assertResponseIsSuccessful();
 
-        $link = $crawler->filter('a.btn.btn-danger[href="/admin/guest/delete/' . $guest->getId() . '"]')->link();
+        $link = $crawler->filter('a.btn.btn-danger[href="/admin/guest/delete/'.$guest->getId().'"]')->link();
 
         $crawler = $this->client->click($link);
 
