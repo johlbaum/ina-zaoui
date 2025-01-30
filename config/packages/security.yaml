@@ -10,7 +10,7 @@ security:
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
+            security: true
         main:
             lazy: true
             user_checker: App\Security\UserAccessChecker

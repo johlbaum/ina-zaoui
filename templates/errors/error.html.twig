@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+		<div class="text-center">
+			<h1 class="display-1">{{ status_code }}</h1>
+			<p class="fw-bold">{{ status_text }}</p>
+			<p>{{ message }}</p>
+			<p>
+				<a href="{{ path('home') }}" class="btn btn-primary">Retour à la page d'accueil</a>
+			</p>
+		</div>
+	</div>
+{% endblock %}

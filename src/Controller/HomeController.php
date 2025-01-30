@@ -79,7 +79,7 @@ class HomeController extends AbstractController
         // On récupère l'invité par son ID parmi la liste des invités (rôle USER) dont l'accès est activé.
         $guest = $this->userRepository->find($id);
         if (!$guest) {
-            throw $this->createNotFoundException('Invité non trouvé.');
+            throw $this->createNotFoundException("L'invité " . $id . " n'existe pas.");
         }
 
         // On récupère les médias associés à l'invité par tranche de 12.
@@ -112,6 +112,9 @@ class HomeController extends AbstractController
         // Si un ID d'album est fourni, on récupère l'album correspondant. Sinon, on récupère tous les albums.
         $albums = $this->albumRepository->findAll();
         $album = $id ? $this->albumRepository->find($id) : null;
+        if ($id && !$album) {
+            throw $this->createNotFoundException("L'album avec l'ID " . $id . " n'existe pas.");
+        }
 
         // On récupère l'administrateur (rôle ADMIN).
         $admin = $this->userRepository->findAdminUser();

@@ -107,6 +107,9 @@ class MediaController extends AbstractController
     public function delete(int $id)
     {
         $media = $this->mediaRepository->find($id);
+        if (!$media) {
+            throw $this->createNotFoundException("Le média avec l'ID " . $id . " n'existe pas.");
+        }
 
         // On récupère le chemin complet du fichier image en fonction de l'environnement (prod ou test).
         $filePath = $this->fileManager->getFilePath($media->getPath());
